@@ -8,7 +8,7 @@
 		<version>3.4.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>edu.reddit</groupId>
+	<groupId>edu.clone</groupId>
 	<artifactId>reddit</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>reddit</name>
@@ -58,7 +58,34 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<properties>
+				<dbUrl>jdbc:postgresql://localhost:5432/admin</dbUrl>
+				<issuerUri>http://localhost:7080/realms/reddit-clone</issuerUri>
+				<dbUser>admin</dbUser>
+				<dbPassword>cocomo2</dbPassword>
+				<dbDdlAuto>update</dbDdlAuto>
+				<serverPort>8081</serverPort>
+			</properties>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>

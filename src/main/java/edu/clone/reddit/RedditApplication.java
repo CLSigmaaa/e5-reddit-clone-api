@@ -1,4 +1,4 @@
-package edu.reddit.reddit;
+package edu.clone.reddit;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
