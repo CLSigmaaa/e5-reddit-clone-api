@@ -29,20 +29,23 @@ public class CommentService {
 
     public Comment updateComment(Long id, Comment commentDetails) {
         Comment comment = getCommentById(id);
-        if (!comment.isDeleted()) {
-            comment.setText(commentDetails.getText());
-            comment.setPost(commentDetails.getPost());
-            comment.setParentComment(commentDetails.getParentComment());
-            comment.setChildComments(commentDetails.getChildComments());
-            return commentRepository.save(comment);
-        } else {
-            throw new RuntimeException("Comment is deleted");
-        }
+        comment.setContent(commentDetails.getContent());
+        comment.setPost(commentDetails.getPost());
+        comment.setParentComment(commentDetails.getParentComment());
+        comment.setChildComments(commentDetails.getChildComments());
+        return commentRepository.save(comment);
     }
 
     public void deleteComment(Long id) {
         Comment comment = getCommentById(id);
         comment.setDeleted(true);
-        comment.setText("[deleted]");
+        comment.setContent("[deleted]");
+    }
+
+    // upvote comment
+    public Comment upvoteComment(Long id) {
+        Comment comment = getCommentById(id);
+        comment.setVoteCount(comment.getVoteCount() + 1);
+        return commentRepository.save(comment);
     }
 }

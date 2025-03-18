@@ -34,6 +34,13 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
+    // upvote a comment
+    @PostMapping("/{id}/upvote")
+    public ResponseEntity<Comment> upvoteComment(@PathVariable Long id) {
+        Comment upvotedComment = commentService.upvoteComment(id);
+        return ResponseEntity.ok(upvotedComment);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody Comment commentDetails) {
         Comment updatedComment = commentService.updateComment(id, commentDetails);
