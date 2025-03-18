@@ -1,6 +1,7 @@
 package edu.clone.reddit.services;
 
 import edu.clone.reddit.dao.SubRedditDao;
+import edu.clone.reddit.dto.RequestSubRedditDTO;
 import edu.clone.reddit.enums.SubscriberRoleEnum;
 import edu.clone.reddit.models.Post;
 import edu.clone.reddit.models.SubReddit;
@@ -9,7 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +26,32 @@ public class SubRedditService {
     @Autowired
     private SubRedditDao subRedditRepository;
 
-    public SubReddit createSubReddit(SubReddit subReddit) {
-        return subRedditRepository.save(subReddit);
+    private String uploadDir = "uploads";
+
+    public SubReddit createSubReddit(RequestSubRedditDTO subReddit, MultipartFile icon) throws IOException {
+        Optional<SubReddit> existingSubReddit = subRedditRepository.findByName(subReddit.getName());
+        if (existingSubReddit.isPresent()) {
+            return existingSubReddit.get();
+        }
+
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        SubReddit newSubReddit = new SubReddit();
+        if (icon != null && !icon.isEmpty()) {
+            String fileName = icon.getOriginalFilename();
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(icon.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            String fileDownloadUri = "/api/images/" + fileName;
+            newSubReddit.setIconUrl(fileDownloadUri);
+        }
+
+        newSubReddit.setName(subReddit.getName());
+        newSubReddit.setDescription(subReddit.getDescription());
+        newSubReddit.setCreatedBy("anonymous");
+        return subRedditRepository.save(newSubReddit);
     }
 
     public SubReddit getSubRedditById(Long id) {

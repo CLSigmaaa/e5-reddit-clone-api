@@ -21,6 +21,8 @@ public class Post {
 
     private Integer voteCount;
 
+    private String imageUrl;
+
     @ManyToOne
     private SubReddit subReddit;
 
@@ -29,8 +31,7 @@ public class Post {
 
     private String createdBy;
 
-    // TODO: see if it works this way
-    private boolean isModified = false;
+    private boolean isModified;
 
     //TODO: add tags
 }

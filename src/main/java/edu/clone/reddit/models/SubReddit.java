@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -21,6 +22,8 @@ public class SubReddit {
 
     private String description;
 
+    private String iconUrl;
+
     @JsonIgnoreProperties("subReddit")
     @OneToMany
     private List<Subscriber> subscribers;
@@ -28,8 +31,8 @@ public class SubReddit {
     @OneToMany
     private List<Post> posts;
 
-    @CreationTimestamp
-    private Long createdAt;
+//    @CreationTimestamp
+//    private LocalDateTime createdAt;
 
     private String createdBy;
 }
